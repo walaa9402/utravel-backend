@@ -4,12 +4,10 @@ var pool = mysql.createPool({
 
 connectionLimit : 10,
 host : 'localhost',
-user : 'admin',
+user : 'root',
 password : '',
 charset: 'utf8',
 database : 'utravel'
 });
-
-
 
 module.exports = pool;

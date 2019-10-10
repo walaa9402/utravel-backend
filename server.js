@@ -16,22 +16,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 var indexRouter = require('./routes/index');
-var employeeRouter = require('./routes/employee');
-var ccRouter = require('./routes/cc');
 var imageRouter = require('./routes/image');
-var univRouter = require('./routes/university');
-var facultyRouter = require('./routes/faculty');
-var studentRouter = require('./routes/student');
-var orderRouter = require('./routes/order');
+var userRouter = require('./routes/user/user');
+var cityAppRouter = require('./routes/user/city')
 
 app.use('/', indexRouter);
-app.use('/employee',employeeRouter);
-app.use('/student',studentRouter);
-app.use('/cc',ccRouter);
 app.use('/image',imageRouter);
-app.use('/univ',univRouter);
-app.use('/faculty',facultyRouter);
-app.use('/order',orderRouter);
+app.use('/user',userRouter);
+app.use('/appcity',cityAppRouter);
 
 
 

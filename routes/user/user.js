@@ -2,7 +2,7 @@ var jwt = require('jwt-simple');
 
 var express = require('express');
 var router = express.Router();
-var pool = require('../config/config');
+var pool = require('../../config/config');
 var app = express();
 
 /* Just for testing. */
@@ -20,7 +20,7 @@ router.post('/login',function(req,res){
             res.json({			
                 status : false,
                 data : {},
-                message : "error in connection"				
+                message : err				
             });			
 		}else{
             if(result.length>0){
@@ -31,7 +31,7 @@ router.post('/login',function(req,res){
                 res.json({		
                     status : true,
                     data : result[0],
-                    message : "done",
+                    message : "login successfully",
                     token:token			
                 });
             }else{
@@ -52,19 +52,19 @@ router.post('/signup',function(req,res){
 	var passwd=req.body.passwd
 	var phone= req.body.phone
 	var city_id= req.body.city_id
-	var sql = "select name from employee where phone=?";
+	var sql = "select name from user where phone=?";
 	pool.query(sql,[phone],function(err,result){
 				if(err){
 			res.json({			
 				status : false,
-				data : null,
+				data : {},
 				message : "error in connection"				
 			});			
 		}else{
 			if(result.length>0){
 				res.json({		
 					status : false,
-					data : result,
+					data : {},
 					message : "phone already exists"			
 				});
 			}else{
@@ -73,7 +73,7 @@ router.post('/signup',function(req,res){
                             if(err){
                         res.json({			
                             status : false,
-                            data : null,
+                            data : {},
                             message : "error in connection"				
                         });			
                     }else{
