@@ -46,7 +46,7 @@ router.post('/login',function(req,res){
 	});
 });
 
-// cc owner or assistant sign up
+// user sign up
 router.post('/signup',function(req,res){
 	var name=req.body.name
 	var passwd=req.body.passwd
