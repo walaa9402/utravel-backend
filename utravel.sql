@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 10, 2019 at 02:02 PM
+-- Generation Time: Oct 20, 2019 at 03:37 PM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.1.12
 
@@ -46,6 +46,92 @@ INSERT INTO `city` (`id`, `name`, `photo`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `company`
+--
+
+CREATE TABLE `company` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `address` varchar(2000) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `cover` varchar(2000) NOT NULL,
+  `logo` varchar(2000) NOT NULL,
+  `map_link` varchar(5000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `company`
+--
+
+INSERT INTO `company` (`id`, `name`, `email`, `address`, `city_id`, `cover`, `logo`, `map_link`) VALUES
+(1, 'El Hossam Travel', 'elhossam@gmail.com', '322-316 أبو قير، سيدي جابر، قسم سيدى جابر،، سيدي جابر، الإسكندرية', 3, '3.jpg', '3.jpg', 'https://goo.gl/maps/agkqWZwetEyvspz66');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `company_phone`
+--
+
+CREATE TABLE `company_phone` (
+  `id` int(11) NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `phone` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `company_phone`
+--
+
+INSERT INTO `company_phone` (`id`, `company_id`, `phone`) VALUES
+(1, 1, '01120719197'),
+(2, 1, '01224266864');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `company_rate`
+--
+
+CREATE TABLE `company_rate` (
+  `company_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `package_id` int(11) NOT NULL,
+  `rate` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `package`
+--
+
+CREATE TABLE `package` (
+  `id` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `from_id` int(11) NOT NULL,
+  `to_id` int(11) NOT NULL,
+  `about` varchar(3000) NOT NULL,
+  `date` bigint(20) NOT NULL,
+  `adding_date` bigint(20) NOT NULL,
+  `cost` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `package_photo`
+--
+
+CREATE TABLE `package_photo` (
+  `id` int(11) NOT NULL,
+  `p_id` int(11) NOT NULL,
+  `path` varchar(3000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user`
 --
 
@@ -75,6 +161,45 @@ ALTER TABLE `city`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `company`
+--
+ALTER TABLE `company`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `city_id` (`city_id`);
+
+--
+-- Indexes for table `company_phone`
+--
+ALTER TABLE `company_phone`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `c_id` (`company_id`);
+
+--
+-- Indexes for table `company_rate`
+--
+ALTER TABLE `company_rate`
+  ADD PRIMARY KEY (`company_id`,`user_id`,`package_id`),
+  ADD KEY `company_id` (`company_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `package_id` (`package_id`);
+
+--
+-- Indexes for table `package`
+--
+ALTER TABLE `package`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `to_id` (`to_id`),
+  ADD KEY `from_id` (`from_id`);
+
+--
+-- Indexes for table `package_photo`
+--
+ALTER TABLE `package_photo`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `p_id` (`p_id`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -92,14 +217,71 @@ ALTER TABLE `city`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `company`
+--
+ALTER TABLE `company`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `company_phone`
+--
+ALTER TABLE `company_phone`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `package`
+--
+ALTER TABLE `package`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `package_photo`
+--
+ALTER TABLE `package_photo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `company`
+--
+ALTER TABLE `company`
+  ADD CONSTRAINT `company_ibfk_1` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`);
+
+--
+-- Constraints for table `company_phone`
+--
+ALTER TABLE `company_phone`
+  ADD CONSTRAINT `company_phone_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
+
+--
+-- Constraints for table `company_rate`
+--
+ALTER TABLE `company_rate`
+  ADD CONSTRAINT `company_rate_ibfk_1` FOREIGN KEY (`package_id`) REFERENCES `package` (`id`),
+  ADD CONSTRAINT `company_rate_ibfk_2` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`),
+  ADD CONSTRAINT `company_rate_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `package`
+--
+ALTER TABLE `package`
+  ADD CONSTRAINT `package_ibfk_1` FOREIGN KEY (`to_id`) REFERENCES `city` (`id`),
+  ADD CONSTRAINT `package_ibfk_2` FOREIGN KEY (`from_id`) REFERENCES `city` (`id`);
+
+--
+-- Constraints for table `package_photo`
+--
+ALTER TABLE `package_photo`
+  ADD CONSTRAINT `package_photo_ibfk_1` FOREIGN KEY (`p_id`) REFERENCES `package` (`id`);
 
 --
 -- Constraints for table `user`

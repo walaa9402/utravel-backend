@@ -19,11 +19,15 @@ var indexRouter = require('./routes/index');
 var imageRouter = require('./routes/image');
 var userRouter = require('./routes/user/user');
 var cityAppRouter = require('./routes/user/city')
+var companyAppRouter = require('./routes/user/company')
+var packageAppRouter = require('./routes/user/company')
 
 app.use('/', indexRouter);
 app.use('/image',imageRouter);
 app.use('/user',userRouter);
-app.use('/appcity',cityAppRouter);
+app.use('/user/city',cityAppRouter);
+app.use('/user/company',companyAppRouter);
+app.use('/user/package',packageAppRouter);
 
 
 

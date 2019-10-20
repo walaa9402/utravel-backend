@@ -12,9 +12,10 @@ router.get('/', function(req, res, next) {
 
 // user login
 router.post('/login',function(req,res){
-	var phone=req.body.phone
-	var sql = "SELECT * FROM user where phone =?";
-	pool.query(sql,[phone],function(err,result){
+    var phone=req.body.phone
+    var passwd = req.body.passwd
+	var sql = "SELECT *,(select name from city where id=city_id) as city FROM user where phone =? and passwd=?";
+	pool.query(sql,[phone,passwd],function(err,result){
         if(err){
             console.log(err)
             res.json({			
@@ -23,6 +24,7 @@ router.post('/login',function(req,res){
                 message : err				
             });			
 		}else{
+            
             if(result.length>0){
                 app.set('jwtTokenSecret', "utravel");
                 var token = jwt.encode({
@@ -38,11 +40,10 @@ router.post('/login',function(req,res){
                 res.json({			
                     status : false,
                     data : {},
-                    message : "check your phone number"				
+                    message : "check your phone or password"				
                 }); 
             }
         }		
-		
 	});
 });
 
@@ -77,13 +78,29 @@ router.post('/signup',function(req,res){
                             message : "error in connection"				
                         });			
                     }else{
-                        res.json({		
-                            status : true,
-                            data : result,
-                            message : "successfully sign up"			
+                        var sql = "SELECT *,(select name from city where id=city_id) as city FROM user where id=?";
+                        pool.query(sql,[result['insertId']],function(err,result){
+                            if(err){
+                                console.log(err)
+                                res.json({			
+                                    status : false,
+                                    data : {},
+                                    message : err				
+                                });			
+                            }else{  
+                                app.set('jwtTokenSecret', "utravel");
+                                var token = jwt.encode({
+                                    iss: result[0].phone
+                                }, app.get('jwtTokenSecret'));
+                                res.json({		
+                                    status : true,
+                                    data : result[0],
+                                    message : "signup successfully",
+                                    token:token			
+                                });
+                            }		
                         });
                     }		
-                    
                 });
             }
 		}		
