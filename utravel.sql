@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 20, 2019 at 03:37 PM
+-- Generation Time: Oct 22, 2019 at 11:31 PM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.1.12
 
@@ -100,6 +100,13 @@ CREATE TABLE `company_rate` (
   `rate` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `company_rate`
+--
+
+INSERT INTO `company_rate` (`company_id`, `user_id`, `package_id`, `rate`) VALUES
+(1, 1, 1, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -117,6 +124,13 @@ CREATE TABLE `package` (
   `cost` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `package`
+--
+
+INSERT INTO `package` (`id`, `name`, `from_id`, `to_id`, `about`, `date`, `adding_date`, `cost`) VALUES
+(1, 'Cairo Trip', 3, 1, 'If you\'ve a mobile application, you may want to send push notifications to users. There are some ways to send notifications, one of the most popular and easiest way is by using Firebase. It\'s a Backend-as-a-Service — BaaS application development platform. It has some features, one of which is Cloud Messaging, which is used to send targeted notifications to users. In this tutorial, I\'m going to give example how to send push notifications using Firebase from Node.js application. This includes how to setup the Firebase account and how to setup Node.js application to be able to send notifications.', 1575060793000, 1571777593000, 250);
+
 -- --------------------------------------------------------
 
 --
@@ -128,6 +142,14 @@ CREATE TABLE `package_photo` (
   `p_id` int(11) NOT NULL,
   `path` varchar(3000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `package_photo`
+--
+
+INSERT INTO `package_photo` (`id`, `p_id`, `path`) VALUES
+(3, 1, '1.jpg'),
+(4, 1, '2.jpg');
 
 -- --------------------------------------------------------
 
@@ -149,6 +171,24 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `name`, `phone`, `passwd`, `city_id`) VALUES
 (1, 'walaa alaa', '01120719197', '1111', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_comp_fav`
+--
+
+CREATE TABLE `user_comp_fav` (
+  `user_id` int(11) NOT NULL,
+  `company_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `user_comp_fav`
+--
+
+INSERT INTO `user_comp_fav` (`user_id`, `company_id`) VALUES
+(1, 1);
 
 --
 -- Indexes for dumped tables
@@ -207,6 +247,14 @@ ALTER TABLE `user`
   ADD KEY `city_id` (`city_id`);
 
 --
+-- Indexes for table `user_comp_fav`
+--
+ALTER TABLE `user_comp_fav`
+  ADD PRIMARY KEY (`user_id`,`company_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `company_id` (`company_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -232,13 +280,13 @@ ALTER TABLE `company_phone`
 -- AUTO_INCREMENT for table `package`
 --
 ALTER TABLE `package`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `package_photo`
 --
 ALTER TABLE `package_photo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -288,6 +336,13 @@ ALTER TABLE `package_photo`
 --
 ALTER TABLE `user`
   ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`);
+
+--
+-- Constraints for table `user_comp_fav`
+--
+ALTER TABLE `user_comp_fav`
+  ADD CONSTRAINT `user_comp_fav_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `user_comp_fav_ibfk_2` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
